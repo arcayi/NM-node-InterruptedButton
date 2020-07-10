@@ -112,11 +112,17 @@
 #include <sensors/SensorBattery.h>
 SensorBattery battery;
 
-// #include <sensors/SensorDigitalInput.h>
-// SensorDigitalInput digitalIn(PA0);
+#include <sensors/SensorInterruptedButton.h>
+SensorInterruptedButton di1(4, 3);
+SensorInterruptedButton di2(5, 3);
+SensorInterruptedButton di3(6, 3);
 
-#include <sensors/SensorInterrupt.h>
-SensorInterrupt interrupt(3);
+#define nDi (3)
+// bool di_invert[] = {true, true, true};
+SensorInterruptedButton di[] = {di1, di2, di3};
+
+// #include <sensors/SensorInterrupt.h>
+// SensorInterrupt interrupt(3);
 
 // #include <sensors/SensorRelay.h>
 // // SensorRelay relay(6);
@@ -163,27 +169,15 @@ void before() {
   battery.setMaxVoltage(BATTERY_MAX_VOLTAGE);
   battery.setReportIntervalSeconds(600);
 
-  // digitalIn.setPinInitialValue(LOW);
-  // digitalIn.setReportTimerMode(IMMEDIATELY);
-  // digitalIn.getChild(1)->setValueDelta(0.1);
+  nodeManager.setInterruptDebounce(10);
+  nodeManager.setSleepSeconds(600);
 
   // set reporting interval for all the sensors to 10 minutes
   // nodeManager.setReportIntervalSeconds(10);
 
-  nodeManager.setInterruptDebounce(100);
-  nodeManager.setSleepSeconds(600);
-  interrupt.setPinInitialValue(HIGH);
-  interrupt.setInterruptMode(FALLING);
-  interrupt.setWaitAfterInterrupt(100);
-
-  // // run function for all the registered sensors
-  // for (List<Sensor *>::iterator itr = nodeManager.sensors.begin();
-  //      itr != nodeManager.sensors.end(); ++itr) {
-  //   Child *child = (Child *)itr;
-    // call each sensor's function
-  //   child->setForceUpdateTimerValue(1);
-  //   child->setValueDelta(0.001);
-  // }
+  // interrupt.setPinInitialValue(HIGH);
+  // interrupt.setInterruptMode(FALLING);
+  // interrupt.setWaitAfterInterrupt(100);
 
   // call NodeManager before routine
   nodeManager.before();
